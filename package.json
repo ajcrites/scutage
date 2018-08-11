@@ -1,0 +1,31 @@
+{
+  "name": "scutage",
+  "version": "0.0.1-ph",
+  "description": "Simple, opinionated Static Site Generator from HTML",
+  "author": "Andrew Crites <acjrites@gmail.com> (https://github.com/ajcrites/scutum)",
+  "license": "MIT",
+  "main": "lib",
+  "bin": "lib/index.js",
+  "types": "lib",
+  "scripts": {
+    "prepublishOnly": "rm -rf lib && tsc && chmod +x lib/index.js",
+    "precommit": "lint-staged",
+    "test": "tsc --project tsconfig.test.json && tslint --project tsconfig.test.json && jest --coverage"
+  },
+  "lint-staged": {
+    "**/*.ts": [
+      "prettier --write --parser typescript --single-quote --trailing-comma all",
+      "tslint --fix",
+      "git add"
+    ]
+  },
+  "devDependencies": {
+    "husky": "^0.14.3",
+    "lint-staged": "^7.2.0",
+    "prettier": "^1.14.2",
+    "ts-config-mobiquity-server": "^1.0.0",
+    "tslint": "^5.11.0",
+    "typescript": "^3.0.1"
+  },
+  "repository": "github:ajcrites/scutum"
+}
