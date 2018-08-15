@@ -78,3 +78,13 @@ the order you want.
 HTML minification is also largely untested and it's probable that `<pre>` gets
 screwed up, and definitely that `white-space: pre<-wrap>` does as well. This may
 be handled later.
+
+## The Name
+Originally I wanted to name this `scutum`. I think I came up with the word from
+someone saying `sputum` in response to my cat's sneezing. `scutum` is apparently
+something to do with turtle shells. It would make a lot more sense for something
+security-related. I couldn't think of anything else, and I didn't want a generic
+static site generation related name. I sort of made up `scutage`, but apparently
+it's a real word that means money paid by a fuedal vassal so that they don't
+have to perform military service. I don't know what that has to do with this
+library... maybe it's my payment to the OSS community.
