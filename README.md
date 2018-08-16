@@ -62,7 +62,7 @@ scutage(inputFilesGlob, options);
 The `options` available are camelCased versions of the long form API options
 listed above. _Currently only `output` does anything_.
 
-### Template Syntax
+### Template Syntax (coming soon)
 Templates are largely logicless with a couple of extra attributes.
 
 * `<link rel="stylesheet" href load>` will be replaced with a corresponding

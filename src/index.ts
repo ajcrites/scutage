@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { scutate } from './scutate';
 
 import * as yargs from 'yargs';
 
@@ -6,7 +7,7 @@ const argv = yargs
   .command('$0 [source]', '', yargs => {
     return yargs
       .positional('source', {
-        describe: 'List of source files to build',
+        describe: 'list of source files to build',
         type: 'string',
         default: '**/*.html',
       })
@@ -24,4 +25,4 @@ const argv = yargs
     default: 'dist',
   }).argv;
 
-argv;
+scutate(argv as any);
