@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { scutate } from './scutate';
+import { scutage } from './scutage';
 
 import * as yargs from 'yargs';
 
@@ -25,4 +25,4 @@ const argv = yargs
     default: 'dist',
   }).argv;
 
-scutate(argv as any);
+scutage(argv as any);
