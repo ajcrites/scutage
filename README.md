@@ -56,7 +56,7 @@ If no argument is provided, `**/*.html` is used by default.
 ### API
 ```ts
 import { scutage } from 'scutage';
-scutage(inputFilesGlob, options);
+scutage(inputFilesGlobString, outputDirectoryNameString);
 ```
 
 The `options` available are camelCased versions of the long form API options
@@ -73,11 +73,16 @@ pattern. The contents of the CSS files will still be minified.
 Keep in mind that you can't specify a particular order when globbing. Most
 likely it will be alphabetical, but I don't think that's guaranteed. If you want
 to retain an order in your CSS/JS, you're better off using separate tags in
-the order you want.
+the order you want. You of course have the option of using a separate library
+for managing CSS imports that can compile to what is used by your `link` tags.
 
 HTML minification is also largely untested and it's probable that `<pre>` gets
 screwed up, and definitely that `white-space: pre<-wrap>` does as well. This may
 be handled later.
+
+## Todo
+* [ ] `load` attribute for link/script
+* [ ] attempt to copy over images that are part of css files (`url()`).
 
 ## The Name
 Originally I wanted to name this `scutum`. I think I came up with the word from

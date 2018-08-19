@@ -1,10 +1,10 @@
 {
   "name": "scutage",
-  "version": "0.0.1-ph",
+  "version": "0.0.1",
   "description": "Simple, opinionated Static Site Generator from HTML",
   "author": "Andrew Crites <acjrites@gmail.com> (https://github.com/ajcrites/scutage)",
   "license": "MIT",
-  "main": "lib",
+  "main": "lib/scutage",
   "bin": "lib/index.js",
   "types": "lib",
   "scripts": {

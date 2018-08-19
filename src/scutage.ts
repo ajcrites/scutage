@@ -1,3 +1,7 @@
+/**
+ * Mutate the provided HTML filenames and create the output directory
+ */
+
 import { JSDOM } from 'jsdom';
 import { readFile, writeFile, copyFile } from 'mz/fs';
 import * as mkdirp from 'mkdirp-promise';
@@ -7,7 +11,11 @@ import * as uglifyEs from 'uglify-es';
 
 import * as globby from 'globby';
 
-export const scutate = async ({
+/**
+ * @param string glob-compatible string of html file inputs
+ * @param string output directory name relative to CWD
+ */
+export const scutage = async ({
   source,
   output,
 }: {
@@ -46,6 +54,7 @@ export const scutate = async ({
           }),
       );
 
+      // Copy all images that match with `img` elements with `src` attributes
       await Promise.all(
         [].slice.call(doc.querySelectorAll('img[src]')).map(async elem => {
           const imgFilename = elem.getAttribute('src');
