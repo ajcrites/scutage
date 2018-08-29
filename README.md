@@ -1,4 +1,4 @@
-# scutage (pre alpha, placeholder)
+# scutage (pre alpha)
 `scutage` is an opinionated static site generator for HTML.
 
 Scutage was created out of my frustration from a lack of static site generators
@@ -6,25 +6,55 @@ that would do what I wanted working with HTML, but was inspired by
 https://github.com/11ty/eleventy. If I only use it only for my own website,
 that's fine with me.
 
-Scutage's goal is to provide a convention-over-configuration mechanism for static
-site generation from mostly static HTML, CSS, and some JavaScript.
+Scutage's goal is to provide a convention-over-configuration mechanism for
+static site generation from mostly static HTML, CSS, and some JavaScript.
 
 If you want more customization / configuration or code splitting, you're
 probably better off using something like Parcel, eleventy, or some combined
 custom solution. This does not and will never support CSS preprocessing and any
-sort of templates other than mostly static HTML.
+sort of templates other than mostly static HTML. That being said, you can
+use other libraries to create static CSS/HTML files that you can give to
+scutage.
 
 ## Purpose
 Scutage is a basic and naive static site generator. Its purpose is to work with
 minimal preprocessing.
 
-It takes html file(s) as input and creates an output retaining directory
+It takes html file(s) as input and creates an output bundle retaining directory
 structure with the following modifications:
 * HTML is minified
 * `<link rel="stylesheet" href>` elements are replaced with `<style>` with
-minified CSS as the contents of the linked href file. Globbing is allowed.
+minified CSS as the contents of the linked href file. Globbing is allowed for
+the `href` property to replace multiple files at once.
 * `<script src>` elements are replaced with `<script>` with
-minified JS as the contents of the linked src file. Globbing is allowed.
+minified JS as the contents of the linked src file. Globbing is allowed for
+the `src` property to replace multiple files at once.
+
+Scutage will maintain the directory structure of the topmost directory it
+finds an html file and put it in the output directory keeping the rest of its
+directory structure. Files found in the current directory as well as files
+found one directory down will be placed directly in the output director.
+For example, a file structure like:
+
+```sh
+src/
+  index.html
+src2/
+  dir/
+    foo.html
+```
+
+Will result in:
+
+```sh
+dist/
+  index.html
+  dir/
+    foo.html
+```
+
+It is recommended that you keep all of your html source files in a directory
+such as `src` and use, for example, `scurage src/**/*.html`.
 
 ## Installation
 You can install it globally and use the `scutage` binary.
@@ -43,7 +73,8 @@ example, or `"src/*.html"`. Note that this needs to be a _string_, so use
 `"src/*.html"` rather than `src/*.html` or else the shell might expand the
 argument inappropriately.
 
-If no argument is provided, `**/*.html` is used by default.
+If no argument is provided, `"**/*.html"` is used by default (`node_modules and
+the provided `output` directories are ignored).
 
 #### CLI Arguments
 
@@ -51,7 +82,7 @@ If no argument is provided, `**/*.html` is used by default.
 | ---------- | --------- | ------- |
 | `-o`       | `--output` | Output directory to copy files. Defaults to `dist` |
 | `-h`       | `--help`  | Help (essentially this) |
-| `-v`       | `--version` | Print `scutage`'s version.
+| `-v`       | `--version` | Print `scutage`'s version. |
 
 ### API
 ```ts
@@ -83,6 +114,7 @@ be handled later.
 ## Todo
 * [ ] `load` attribute for link/script
 * [ ] attempt to copy over images that are part of css files (`url()`).
+* [ ] `force` and `clear` options for managing existing dist files.
 
 ## The Name
 Originally I wanted to name this `scutum`. I think I came up with the word from

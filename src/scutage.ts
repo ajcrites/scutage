@@ -29,57 +29,64 @@ export const scutage = async ({
   const htmlFiles = await globby([sourceDir, `!${outputDir}/*`]);
 
   await Promise.all(
-    htmlFiles.map(async filename => {
-      const dir = dirname(filename);
-      const dom = await JSDOM.fromFile(filename);
-      const doc = dom.window.document;
+    htmlFiles
+      .filter(filename => !filename.includes('node_modules/'))
+      .map(async filename => {
+        const dir = dirname(filename);
+        const relativeDir = dir.replace(cwd, '').replace(/\/[^\/]*(\/|$)/, '');
+        const dom = await JSDOM.fromFile(filename);
+        const doc = dom.window.document;
 
-      // Minify all script tags with JavaScript text
-      [].slice.call(doc.querySelectorAll('script:not([src])')).map(elem => {
-        elem.textContent = uglifyEs.minify(elem.textContent).code;
-      });
+        // Minify all script tags with JavaScript text
+        [].slice.call(doc.querySelectorAll('script:not([src])')).map(elem => {
+          elem.textContent = uglifyEs.minify(elem.textContent).code;
+        });
 
-      // Transform all link tags into style tags with their contents
-      await Promise.all(
-        [].slice
-          .call(doc.querySelectorAll('link[rel=stylesheet][href]'))
-          .map(async elem => {
-            const cssFile = elem.getAttribute('href');
-            if (!/^(https?:\/\/|\/\/)/.test(cssFile)) {
-              const styleTag = doc.createElement('style');
-              styleTag.textContent = await readFile(`${dir}/${cssFile}`);
+        // Transform all link tags into style tags with their contents
+        await Promise.all(
+          [].slice
+            .call(doc.querySelectorAll('link[rel=stylesheet][href]'))
+            .map(async elem => {
+              const cssFile = elem.getAttribute('href');
+              if (!/^(https?:\/\/|\/\/)/.test(cssFile)) {
+                const styleTag = doc.createElement('style');
+                styleTag.textContent = await readFile(`${dir}/${cssFile}`);
 
-              elem.replaceWith(styleTag);
-            }
+                elem.replaceWith(styleTag);
+              }
+            }),
+        );
+
+        // Copy all images that match with `img` elements with `src` attributes
+        await Promise.all(
+          [].slice.call(doc.querySelectorAll('img[src]')).map(async elem => {
+            const imgFilename = elem.getAttribute('src');
+            await mkdirp(`${outputDir}/${dirname(imgFilename)}`);
+            await copyFile(
+              `${dir}/${imgFilename}`,
+              `${outputDir}/${imgFilename}`,
+            );
           }),
-      );
+        );
 
-      // Copy all images that match with `img` elements with `src` attributes
-      await Promise.all(
-        [].slice.call(doc.querySelectorAll('img[src]')).map(async elem => {
-          const imgFilename = elem.getAttribute('src');
-          await mkdirp(`${outputDir}/${dirname(imgFilename)}`);
-          await copyFile(
-            `${dir}/${imgFilename}`,
-            `${outputDir}/${imgFilename}`,
-          );
-        }),
-      );
+        const content = minify(dom.serialize(), {
+          collapseBooleanAttributes: true,
+          collapseInlineTagWhitespace: true,
+          collapseWhitespace: true,
+          conservativeCollapse: true,
+          minifyCSS: true,
+          removeAttributeQuotes: true,
+          removeComments: true,
+          removeOptionalTags: true,
+          removeRedundantAttributes: true,
+          minifyJS: true,
+        });
 
-      const content = minify(dom.serialize(), {
-        collapseBooleanAttributes: true,
-        collapseInlineTagWhitespace: true,
-        collapseWhitespace: true,
-        conservativeCollapse: true,
-        minifyCSS: true,
-        removeAttributeQuotes: true,
-        removeComments: true,
-        removeOptionalTags: true,
-        removeRedundantAttributes: true,
-        minifyJS: true,
-      });
-
-      await writeFile(`${outputDir}/${basename(filename)}`, content);
-    }),
+        await mkdirp(`${outputDir}/${relativeDir}`);
+        await writeFile(
+          `${outputDir}/${relativeDir}/${basename(filename)}`,
+          content,
+        );
+      }),
   );
 };
