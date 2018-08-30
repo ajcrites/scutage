@@ -81,8 +81,10 @@ the provided `output` directories are ignored).
 | Short Name | Long Name | Purpose |
 | ---------- | --------- | ------- |
 | `-o`       | `--output` | Output directory to copy files. Defaults to `dist` |
-| `-h`       | `--help`  | Help (essentially this) |
+| `-k`       | `--keep-existing` | Do not delete the output directory if it already exists (by default it is deleted) |
+|            | `--override` | Replace existing matching files in the output directory (by default they are replaced, use `--no-override`) |
 | `-v`       | `--version` | Print `scutage`'s version. |
+| `-h`       | `--help`  | Help (essentially this) |
 
 ### API
 ```ts

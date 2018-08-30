@@ -3,8 +3,9 @@
  */
 
 import { JSDOM } from 'jsdom';
-import { readFile, writeFile, copyFile } from 'mz/fs';
+import { readFile, writeFile, copyFile, exists } from 'mz/fs';
 import * as mkdirp from 'mkdirp-promise';
+import * as rmfr from 'rmfr';
 import { minify } from 'html-minifier';
 import { basename, dirname } from 'path';
 import * as uglifyEs from 'uglify-es';
@@ -18,13 +19,20 @@ import * as globby from 'globby';
 export const scutage = async ({
   source,
   output,
+  keepExisting,
+  override,
 }: {
   source: string;
   output: string;
+  keepExisting: boolean;
+  override: boolean;
 }) => {
   const cwd = process.cwd();
   const outputDir = `${cwd}/${output}`;
   const sourceDir = `${cwd}/${source}`;
+  if (!keepExisting) {
+    await rmfr(outputDir);
+  }
   await mkdirp(outputDir);
   const htmlFiles = await globby([sourceDir, `!${outputDir}/*`]);
 
@@ -62,10 +70,10 @@ export const scutage = async ({
           [].slice.call(doc.querySelectorAll('img[src]')).map(async elem => {
             const imgFilename = elem.getAttribute('src');
             await mkdirp(`${outputDir}/${dirname(imgFilename)}`);
-            await copyFile(
-              `${dir}/${imgFilename}`,
-              `${outputDir}/${imgFilename}`,
-            );
+            const targetFilename = `${outputDir}/${imgFilename}`;
+            if (override || !(await exists(targetFilename))) {
+              await copyFile(`${dir}/${imgFilename}`, targetFilename);
+            }
           }),
         );
 
@@ -83,10 +91,12 @@ export const scutage = async ({
         });
 
         await mkdirp(`${outputDir}/${relativeDir}`);
-        await writeFile(
-          `${outputDir}/${relativeDir}/${basename(filename)}`,
-          content,
-        );
+        const targetFilename = `${outputDir}/${relativeDir}/${basename(
+          filename,
+        )}`;
+        if (override || !(await exists(targetFilename))) {
+          await writeFile(targetFilename, content);
+        }
       }),
   );
 };
