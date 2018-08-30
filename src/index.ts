@@ -24,6 +24,17 @@ function run() {
       alias: 'o',
       describe: 'Output directory to copy files.',
       default: 'dist',
+    })
+    .option('keep-existing', {
+      alias: 'k',
+      describe: 'Keep existing output directory. If not set, it is cleared.',
+      type: 'boolean',
+      default: false,
+    })
+    .option('override', {
+      describe: 'Replace existing matched files in the output directory.',
+      type: 'boolean',
+      default: true,
     }).argv;
 
   scutage(argv as any);
