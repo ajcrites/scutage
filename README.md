@@ -1,6 +1,8 @@
 # scutage (pre alpha)
 `scutage` is an opinionated static site generator for HTML.
 
+[![version](https://img.shields.io/npm/v/scutage.svg)](https://www.npmjs.com/package/scutage)
+
 Scutage was created out of my frustration from a lack of static site generators
 that would do what I wanted working with HTML, but was inspired by
 https://github.com/11ty/eleventy. If I only use it only for my own website,
@@ -30,13 +32,14 @@ the `href` property to replace multiple files at once.
 minified JS as the contents of the linked src file. Globbing is allowed for
 the `src` property to replace multiple files at once.
 
-Scutage will maintain the directory structure of the topmost directory it
-finds an html file and put it in the output directory keeping the rest of its
+Scutage will maintain the directory structure of the topmost directories it
+finds html files and put them in the output directory keeping the rest of its
 directory structure. Files found in the current directory as well as files
 found one directory down will be placed directly in the output director.
 For example, a file structure like:
 
 ```sh
+bar.html
 src/
   index.html
 src2/
@@ -48,13 +51,14 @@ Will result in:
 
 ```sh
 dist/
+  bar.html
   index.html
   dir/
     foo.html
 ```
 
 It is recommended that you keep all of your html source files in a directory
-such as `src` and use, for example, `scurage src/**/*.html`.
+such as `src` and use, for example, `scutage src/**/*.html`.
 
 ## Installation
 You can install it globally and use the `scutage` binary.
@@ -65,7 +69,7 @@ You can also install it locally, e.g. `yarn add --dev scutage`.
 You can use the scutage CLI or API.
 
 ### CLI
-Run The `scutage` command with the optional input argument and optional options.
+Run The `scutage` command with the optional input argument and options.
 
 The command takes one argument which is a glob-compatible string of html files
 to be moved to the output directory. You can simply use `src/index.html` for
@@ -82,7 +86,7 @@ the provided `output` directories are ignored).
 | ---------- | --------- | ------- |
 | `-o`       | `--output` | Output directory to copy files. Defaults to `dist` |
 | `-k`       | `--keep-existing` | Do not delete the output directory if it already exists (by default it is deleted) |
-|            | `--override` | Replace existing matching files in the output directory (by default they are replaced, use `--no-override`) |
+|            | `--override` | Replace existing matching files in the output directory (by default they are replaced, use `--no-override` to not replace) |
 | `-v`       | `--version` | Print `scutage`'s version. |
 | `-h`       | `--help`  | Help (essentially this) |
 
@@ -93,7 +97,7 @@ scutage(inputFilesGlobString, outputDirectoryNameString);
 ```
 
 The `options` available are camelCased versions of the long form API options
-listed above. _Currently only `output` does anything_.
+listed above.
 
 ### Template Syntax (coming soon)
 Templates are largely logicless with a couple of extra attributes.
