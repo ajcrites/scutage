@@ -1,9 +1,8 @@
-#!/usr/bin/env node
 import { scutage } from './scutage';
 
 import * as yargs from 'yargs';
 
-function run() {
+export function run() {
   const argv = yargs
     .command('$0 [source]', '', yargs => {
       return yargs
@@ -41,7 +40,3 @@ function run() {
 }
 
 export { scutage };
-
-if (require.main === module) {
-  run();
-}

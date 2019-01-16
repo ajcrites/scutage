@@ -8,9 +8,13 @@
   "bin": "lib/index.js",
   "types": "lib",
   "scripts": {
-    "prepublishOnly": "rm -rf lib && tsc && chmod +x lib/index.js",
-    "precommit": "lint-staged",
-    "test": "tsc --project tsconfig.test.json && tslint --project tsconfig.test.json && jest --coverage"
+    "prepublishOnly": "rimraf lib dist && tsc --project tsconfig.build.json && cp src/bin.js lib && ncc build lib/bin.js -m",
+    "test": "tsc && tslint --project tsconfig.json"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged && yarn test"
+    }
   },
   "lint-staged": {
     "**/*.ts": [
@@ -20,15 +24,15 @@
     ]
   },
   "devDependencies": {
-    "@types/yargs": "^11.1.1",
-    "husky": "^0.14.3",
-    "lint-staged": "^7.2.0",
-    "prettier": "^1.14.2",
-    "ts-config-mobiquity-server": "^1.0.0",
-    "tslint": "^5.11.0",
-    "typescript": "^3.0.1"
+    "@types/yargs": "^12.0.5",
+    "@zeit/ncc": "^0.9.0",
+    "husky": "^1.3.1",
+    "lint-staged": "^8.1.0",
+    "prettier": "^1.15.3",
+    "ts-config-mobiquity-server": "^5.0.0",
+    "tslint": "^5.12.1",
+    "typescript": "^3.2.2"
   },
-  "repository": "github:ajcrites/scutage",
   "dependencies": {
     "clean-css": "^4.2.1",
     "globby": "^8.0.1",
@@ -39,5 +43,7 @@
     "rmfr": "^2.0.0",
     "uglify-es": "^3.3.9",
     "yargs": "^12.0.1"
-  }
+  },
+  "files": ["/lib", "/dist"],
+  "repository": "github:ajcrites/scutage"
 }
