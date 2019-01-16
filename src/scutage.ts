@@ -40,6 +40,15 @@ export const scutage = async ({
     htmlFiles
       .filter(filename => !filename.includes('node_modules/'))
       .map(async filename => {
+        if (!/\.html$/.test(filename)) {
+          console.warn(`
+WARNING: Found a non-HTML file ${filename}.
+This will probably not work as intended. If you want to copy over a file that is
+not loaded by your static HTML file, you should copy it to ${output} after \`scutage\`.
+
+\`scutage\` will proceed with treating this file as if it were HTML.
+`);
+        }
         const dir = dirname(filename);
         const relativeDir = dir.replace(cwd, '').replace(/\/[^\/]*(\/|$)/, '');
         const dom = await JSDOM.fromFile(filename);
