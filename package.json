@@ -5,10 +5,10 @@
   "author": "Andrew Crites <acjrites@gmail.com> (https://github.com/ajcrites/scutage)",
   "license": "MIT",
   "main": "lib/scutage",
-  "bin": "lib/index.js",
+  "bin": "dist/index.js",
   "types": "lib",
   "scripts": {
-    "prepublishOnly": "rimraf lib dist && tsc --project tsconfig.build.json && cp src/bin.js lib && ncc build lib/bin.js -m",
+    "prepublishOnly": "rimraf lib dist && tsc --project tsconfig.build.json && cp src/bin.js lib && ncc build lib/bin.js -m -e uglify-es -e html-minifier",
     "test": "tsc && tslint --project tsconfig.json"
   },
   "husky": {
