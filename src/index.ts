@@ -4,6 +4,7 @@ import * as yargs from 'yargs';
 
 export function run() {
   const argv = yargs
+    .version('0.0.6')
     .command('$0 [source]', '', yargs => {
       return yargs
         .positional('source', {
