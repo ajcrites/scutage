@@ -1,9 +1,3 @@
 {
-  "extends": "./node_modules/ts-config-mobiquity-server/tsconfig.json",
-  "compilerOptions": {
-    "declaration": true,
-    "outDir": "lib"
-  },
-  "include": ["src/**/*"],
-  "exclude": ["src/**/__tests__/*"]
+  "extends": "./node_modules/ts-config-mobiquity-server/tsconfig.json"
 }

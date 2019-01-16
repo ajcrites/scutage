@@ -35,7 +35,7 @@ the `src` property to replace multiple files at once.
 Scutage will maintain the directory structure of the topmost directories it
 finds html files and put them in the output directory keeping the rest of its
 directory structure. Files found in the current directory as well as files
-found one directory down will be placed directly in the output director.
+found one directory down will be placed directly in the output directory.
 For example, a file structure like:
 
 ```sh
@@ -59,6 +59,14 @@ dist/
 
 It is recommended that you keep all of your html source files in a directory
 such as `src` and use, for example, `scutage src/**/*.html`.
+
+**Scutage is intended only to work with HTML files**. It will treat any files
+given to it as HTML files although it will print a warning if it encounters
+a file without a `.html` extension.
+
+Scutage will include asset files (scripts, styles, images) that are imported by
+your static HTML files in its output. If you want to copy a separate file over,
+scutage will not do that for you. You'll have to copy it to scutage's output.
 
 ## Installation
 You can install it globally and use the `scutage` binary.
