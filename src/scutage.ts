@@ -6,9 +6,9 @@ import { JSDOM } from 'jsdom';
 import { readFile, writeFile, copyFile, exists } from 'mz/fs';
 import * as mkdirp from 'mkdirp-promise';
 import * as rmfr from 'rmfr';
-import { minify } from 'html-minifier';
+import { minify as htmlMinify } from 'html-minifier';
 import { basename, dirname } from 'path';
-import * as uglifyEs from 'uglify-es';
+import { minify as jsMinify } from 'terser';
 
 import * as globby from 'globby';
 
@@ -56,7 +56,11 @@ not loaded by your static HTML file, you should copy it to ${output} after \`scu
 
         // Minify all script tags with JavaScript text
         [].slice.call(doc.querySelectorAll('script:not([src])')).map(elem => {
-          elem.textContent = uglifyEs.minify(elem.textContent).code;
+          const minifyResult = jsMinify(elem.textContent);
+          if (minifyResult.error) {
+            throw minifyResult.error;
+          }
+          elem.textContent = minifyResult.code;
         });
 
         // Transform all link tags into style tags with their contents
@@ -86,7 +90,7 @@ not loaded by your static HTML file, you should copy it to ${output} after \`scu
           }),
         );
 
-        const content = minify(dom.serialize(), {
+        const content = htmlMinify(dom.serialize(), {
           collapseBooleanAttributes: true,
           collapseInlineTagWhitespace: true,
           collapseWhitespace: true,
